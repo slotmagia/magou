@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ozon API 请求工具</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="header">
+        <h3>🛒 Ozon API 请求工具</h3>
+    </div>
+
+    <div class="tabs">
+        <button class="tab active" data-tab="request">请求配置</button>
+        <button class="tab" data-tab="cookies">Cookie 管理</button>
+        <button class="tab" data-tab="history">请求历史</button>
+    </div>
+
+    <div class="container">
+        <!-- 请求配置标签页 -->
+        <div id="tab-request" class="tab-content active">
+            <div class="info-panel">
+                <span class="status-indicator status-success" id="connection-status"></span>
+                当前状态：<span id="status-text">准备就绪</span>
+                <span class="cookie-count" id="cookie-count">0 cookies</span>
+            </div>
+
+            <div class="form-group">
+                <label for="apiType">API 类型预设：</label>
+                <select id="apiType">
+                    <option value="finance-info">💰 财务信息 (finance-info)</option>
+                    <option value="get-language">🌐 获取语言 (get-language)</option>
+                    <option value="company-info">🏢 公司信息 (company-info)</option>
+                    <option value="user-profile">👤 用户配置 (user-profile)</option>
+                    <option value="custom">⚙️ 自定义请求</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="url">请求 URL：</label>
+                <input type="text" id="url" value="https://seller.ozon.ru/api/company/finance-info" placeholder="输入完整的 API URL">
+                <div class="url-preview" id="url-preview"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="method">请求方法：</label>
+                <select id="method">
+                    <option value="GET">GET</option>
+                    <option value="POST" selected>POST</option>
+                    <option value="PUT">PUT</option>
+                    <option value="DELETE">DELETE</option>
+                    <option value="PATCH">PATCH</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="companyId">公司 ID：</label>
+                <input type="text" id="companyId" value="2361110" placeholder="输入您的 Ozon 公司 ID">
+            </div>
+
+            <div class="form-group">
+                <label for="customHeaders">自定义请求头 (JSON格式)：</label>
+                <div class="json-editor">
+                    <textarea id="customHeaders" class="json-input" placeholder='{"Authorization": "Bearer token", "Custom-Header": "value"}'></textarea>
+                    <div class="validation-message" id="headers-validation"></div>
+                </div>
+            </div>
+
+            <div class="form-group" id="body-group">
+                <label for="requestBody">请求体 (JSON格式)：</label>
+                <div class="json-editor">
+                    <textarea id="requestBody" class="json-input">{"marketplaceSellerId":"2361110"}</textarea>
+                    <div class="validation-message" id="body-validation"></div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button id="sendRequest">
+                    <span id="send-text">🚀 发送请求</span>
+                    <span id="loading-spinner" class="loading-spinner" style="display: none;"></span>
+                </button>
+                <button id="clearForm" class="secondary">🧹 清空表单</button>
+            </div>
+        </div>
+
+        <!-- Cookie 管理标签页 -->
+        <div id="tab-cookies" class="tab-content">
+            <div class="info-panel">
+                自动提取当前页面的 cookies，用于 API 请求认证
+            </div>
+
+            <div class="form-group">
+                <label>Cookie 操作：</label>
+                <div class="button-group">
+                    <button id="extractCookies" class="secondary">📥 提取 Cookies</button>
+                    <button id="clearCookies" class="danger">🗑️ 清空 Cookies</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="cookieList">当前 Cookies：</label>
+                <textarea id="cookieList" readonly placeholder="暂无 cookies 数据"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="cookieString">Cookie 字符串（手动输入）：</label>
+                <textarea id="cookieString" placeholder="可以手动粘贴 cookie 字符串"></textarea>
+                <button id="parseCookies" style="margin-top: 8px;">📋 解析并保存</button>
+            </div>
+        </div>
+
+        <!-- 请求历史标签页 -->
+        <div id="tab-history" class="tab-content">
+            <div class="info-panel">
+                查看最近的 API 请求记录
+            </div>
+
+            <div class="form-group">
+                <div class="button-group">
+                    <button id="clearHistory" class="danger">🗑️ 清空历史</button>
+                    <button id="exportHistory" class="secondary">📤 导出历史</button>
+                </div>
+            </div>
+
+            <div id="historyList" class="history-container">
+                <div class="info-panel">暂无请求历史</div>
+            </div>
+        </div>
+
+        <!-- 结果显示区域 -->
+        <div id="result"></div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
+
+

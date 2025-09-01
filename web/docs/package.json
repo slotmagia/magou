@@ -1,0 +1,18 @@
+{
+  "name": "hotgo-docs",
+  "version": "1.0.0",
+  "description": "HotGo 2.0 前端开发文档",
+  "scripts": {
+    "serve": "docsify serve . --port 3001",
+    "build": "docsify generate . --target ./dist"
+  },
+  "devDependencies": {
+    "docsify-cli": "^4.4.4"
+  }
+}
+
+
+
+
+
+

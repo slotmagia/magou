@@ -1,0 +1,111 @@
+# hotgo系统配置
+system:
+  # 应用名称
+  appName: "hotgo"
+  # 应用版本
+  appVersion: "1.0.0"
+  # 应用环境
+  mode: "develop"
+
+  log:
+    # 日志开关，可选：false|true，默认为true
+    switch: true
+    # 是否启用队列，启用时需要配置队列信息，可选：false|true，默认为true
+    queue: true
+    # 需要记录的模块
+    module: ["admin", "api", "default"]
+    # 不记录的状态码，如： ["0", "-1"]
+    skipCode: []
+
+# 数据库配置
+database:
+  default:
+    link: "mysql:root:root@tcp(localhost:3306)/admin?charset=utf8mb4&parseTime=True&loc=Local"
+    debug: true
+    charset: "utf8mb4"
+    dryRun: false
+    maxIdle: 10
+    maxOpen: 100
+    maxLifetime: "30s"
+    createdAt: "created_at"
+    updatedAt: "updated_at"
+    deletedAt: "deleted_at"
+    timeMaintainDisabled: false
+
+# 日志配置
+logger:
+  # 日志级别: debug, info, warn, error, fatal
+  level: "debug"
+  # 日志格式: text, json
+  format: "text"
+  # 是否输出到控制台
+  stdoutPrint: true
+  # 日志文件路径
+  path: "logs"
+  # 日志文件名
+  file: "app.log"
+  # 是否异步写入
+  async: true
+  # 切割大小 (100MB)
+  rotateSize: 104857600
+  # 切割过期时间 (7天)
+  rotateExpire: "168h"
+  # 切割数量
+  rotateCount: 10
+  # 是否备份
+  rotateBackup: true
+  # 是否压缩
+  rotateCompress: true
+  # 调用栈跳过层数
+  callerSkip: 3
+  # 是否显示调用行号
+  callerLine: true
+  # 是否显示调用文件
+  callerFile: true
+  # 是否显示调用函数
+  callerFunction: false
+  # 上下文键名
+  ctxKeys: ["request_id", "trace_id", "user_id", "method", "path"]
+  # 请求头键名
+  headerKeys: ["X-Request-ID", "X-Trace-ID", "X-User-ID"]
+
+# 路由权限配置
+router:
+  api:
+    # 路由前缀
+    prefix: "/api"
+    # 不需要登录验证的路由
+    exceptLogin:
+      - "/login"
+      - "/register" 
+      - "/captcha"
+      - "/forgot-password"
+      - "/reset-password"
+      - "/ping"
+      - "/health"
+    # 不需要权限验证的路由（已登录但不验证具体权限）
+    exceptAuth:
+      - "/user/profile"
+      - "/user/logout"
+      - "/user/refresh-token"
+      - "/menu/user-menus"
+      - "/common/upload"
+
+server:
+  # 商户ID
+  merchantId: 1001
+  # 商户私钥
+  ApiKey: "5787c7a121190011fac8376b1d3e0396"
+  # 域名
+  domain: "localhost"
+  # 服务端口
+  address: ":8000"
+
+# Jaeger链路追踪配置
+jaeger:
+  # 是否启用链路追踪
+  switch: true
+  # Jaeger agent地址
+  endpoint: "http://localhost:14268/api/traces"
+
+

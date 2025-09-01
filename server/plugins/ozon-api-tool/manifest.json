@@ -1,0 +1,38 @@
+{
+    "manifest_version": 3,
+    "name": "Ozon API 请求工具",
+    "version": "1.0.0",
+    "description": "用于发送 Ozon 卖家平台 API 请求的浏览器插件",
+    "permissions": [
+        "activeTab",
+        "storage",
+        "cookies",
+        "scripting"
+    ],
+    "host_permissions": [
+        "https://seller.ozon.ru/*",
+        "https://*.ozon.ru/*"
+    ],
+    "action": {
+        "default_popup": "popup.html",
+        "default_title": "Ozon API 工具",
+        "default_icon": "icons/icon16.png"
+    },
+    "content_scripts": [{
+        "matches": ["https://seller.ozon.ru/*", "https://*.ozon.ru/*"],
+        "js": ["content.js"],
+        "run_at": "document_end"
+    }],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "web_accessible_resources": [{
+        "resources": ["popup.html", "styles.css"],
+        "matches": ["https://seller.ozon.ru/*"]
+    }],
+    "icons": {
+        "16": "icons/icon16.png"
+    }
+}
+
+
