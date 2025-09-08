@@ -7,7 +7,7 @@ export enum ApiEnum {
   SiteAccountLogin = '/site/accountLogin', // 账号登录
   SiteMobileLogin = '/site/mobileLogin', // 手机号登录
   SiteLoginConfig = '/site/loginConfig', // 登录配置
-  SiteLogout = '/site/logout', // 注销
+  SiteLogout = '/logout', // 注销
   SiteConfig = '/site/config', // 配置信息
 
   // 用户
@@ -15,4 +15,7 @@ export enum ApiEnum {
 
   // 角色
   RoleDynamic = '/role/dynamic', // 动态路由
+
+  // 菜单
+  MenuRouters = '/menu/routers', // 获取前端路由
 }

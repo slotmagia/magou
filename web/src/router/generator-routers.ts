@@ -21,6 +21,41 @@ export const routerGenerator = (routerMap, parent?): any[] => {
   
   return routerMap.map((item) => {
     console.log('📝 处理路由项:', item);
+    
+    // 特殊处理：如果是仪表盘路由且没有父路由，需要包装在Layout中
+    if (item.path === '/dashboard' && !parent && item.component !== 'Layout' && item.component !== 'LAYOUT') {
+      console.log('🎯 检测到顶级仪表盘路由，包装在Layout中');
+      return {
+        path: '/dashboard',
+        name: 'DashboardLayout',
+        component: 'LAYOUT',
+        redirect: '/dashboard/console',
+        meta: {
+          title: item.title || '仪表板',
+          label: item.title || '仪表板',
+          icon: constantRouterIcon[item.icon] || null,
+          type: 1,
+          sort: item.sort || 0
+        },
+        children: [{
+          path: 'console',
+          name: item.name || 'Console',
+          component: mapComponentPath(item.component),
+          meta: {
+            title: item.title || '控制台',
+            label: item.title || '控制台',
+            icon: constantRouterIcon[item.icon] || null,
+            permissions: item.permission ? [item.permission] : null,
+            hidden: item.hidden || false,
+            alwaysShow: item.alwaysShow || false,
+            noCache: false,
+            breadcrumb: item.breadcrumb !== false,
+            type: 2
+          }
+        }]
+      };
+    }
+    
     // 处理路径，确保以/开头但避免重复/
     let routePath = item.path;
     if (parent && parent.path) {
@@ -41,7 +76,7 @@ export const routerGenerator = (routerMap, parent?): any[] => {
     const routeName = item.name || generateRouteName(item.path, item.id);
 
     // 处理菜单标题 - 如果title为空，使用路径生成默认标题
-    const title = item.meta?.title || generateDefaultTitle(item.path);
+    const title = item.meta?.title || item.title || generateDefaultTitle(item.path);
 
     const currentRouter: any = {
       // 路由地址
@@ -55,13 +90,13 @@ export const routerGenerator = (routerMap, parent?): any[] => {
         ...item.meta,
         title: title,
         label: title,
-        icon: constantRouterIcon[item.meta?.icon] || null,
-        permissions: item.meta?.permissions || null,
+        icon: constantRouterIcon[item.meta?.icon || item.icon] || null,
+        permissions: item.meta?.permissions || (item.permission ? [item.permission] : null),
         hidden: item.hidden || false,
         alwaysShow: item.alwaysShow || false,
         noCache: item.meta?.noCache || false,
-        breadcrumb: item.meta?.breadcrumb !== false,
-        type: item.meta?.type || (item.children ? 1 : 2), // 1=目录 2=菜单
+        breadcrumb: item.meta?.breadcrumb !== false && item.breadcrumb !== false,
+        type: item.meta?.type || item.type || (item.children ? 1 : 2), // 1=目录 2=菜单
       },
     };
 
@@ -140,6 +175,8 @@ function mapComponentPath(componentPath: string): string {
   const componentMap: Record<string, string> = {
     // 仪表板相关
     'dashboard/index': '/dashboard/console/console',
+    'dashboard/console': '/dashboard/console/console',
+    'dashboard/console/index': '/dashboard/console/console',
     
     // 系统管理相关 - 映射到permission目录
     'system/user/index': '/org/user/user',

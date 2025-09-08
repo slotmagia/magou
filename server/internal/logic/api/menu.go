@@ -9,6 +9,7 @@ import (
 	"client-app/internal/model/input/sysin"
 	"client-app/internal/model/output/sysout"
 	"client-app/internal/service"
+	"client-app/utility/logger"
 
 	"github.com/gogf/gf/v2/database/gdb"
 	"github.com/gogf/gf/v2/errors/gerror"
@@ -65,7 +66,7 @@ func (s *sMenu) GetMenuList(ctx context.Context, in *sysin.MenuListInp) (res *sy
 	// 排序
 	orderBy := in.OrderBy
 	if orderBy == "" {
-		orderBy = "sort"
+		orderBy = "sort_order"
 	}
 	m = m.Order(fmt.Sprintf("%s %s", orderBy, in.OrderType))
 
@@ -480,11 +481,14 @@ func (s *sMenu) GetMenuOptions(ctx context.Context, in *sysin.MenuOptionInp) (re
 func (s *sMenu) GetRouters(ctx context.Context) (res []*sysout.RouterModel, err error) {
 	// 查询启用的菜单
 	var menuEntities []*entity.Menu
+	start := gtime.Now()
 	err = g.DB().Model("sys_menus").
 		Where("status", entity.MenuStatusEnabled).
 		WhereIn("menu_type", []int{entity.MenuTypeDir, entity.MenuTypeMenu}).
 		Order("sort_order ASC, id ASC").
 		Scan(&menuEntities)
+	// 打印可点击的调用位置，便于从控制台跳转到此SQL生成处
+	logger.LogSQLWithCaller(ctx, "(SQL见上一条Gf调试输出)", nil, gtime.Now().Sub(start))
 
 	if err != nil {
 		return nil, gerror.Newf("查询路由列表失败: %v", err)

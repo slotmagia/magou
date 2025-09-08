@@ -214,7 +214,7 @@ export function getMenuRouters() {
       children?: any[];
     }>;
   }>>({
-    url: '/menu/routers',
+    url: ApiEnum.MenuRouters,
     method: 'GET',
   });
 }
